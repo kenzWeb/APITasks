@@ -108,248 +108,185 @@ API предоставляет возможности управления по�
 
 ---
 
-## Управление Задачами
-
-### GET `/tasks`
-
-- **Описание**: Получение списка задач с фильтрацией, сортировкой и пагинацией.
-- **Пример запроса**:
-
-  ```bash
-  curl -X GET "http://localhost:3000/tasks?title=Task&sort={\"status\":\"asc\"}&skip=0&take=5" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-  ```
-
-- **Пример ответа**:
-  ```json
-  [
-    {
-      "id": "task-id",
-      "title": "Task Title",
-      "description": "Task Description",
-      "status": "PENDING"
-    }
-  ]
-  ```
+Давайте добавим детали о фильтрации и сортировке для ваших запросов. 
 
 ---
 
-### POST `/tasks`
+## 1. Аутентификация и Авторизация
 
-- **Описание**: Создание новой задачи.
-- **Пример запроса**:
+(Этот раздел остаётся без изменений)
 
-  ```bash
-  curl -X POST http://localhost:3000/tasks \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "New Task",
-    "description": "Task Description",
-    "status": "PENDING"
-  }'
-  ```
+## 2. Управление Задачами
 
-- **Пример ответа**:
-  ```json
+### Конечная точка: `/tasks`
+**Метод:** GET  
+**Описание:** Получение списка задач с возможностью фильтрации и сортировки.  
+**Параметры запроса:**
+- `title` (string, optional) — Фильтр по названию задачи.
+- `description` (string, optional) — Фильтр по описанию задачи.
+- `filter` (string, optional) — Фильтр в формате JSON. Пример: `{"status": "PENDING"}`
+- `sort` (string, optional) — Сортировка в формате JSON. Пример: `{"title": "asc"}`. Возможные значения: `"asc"` для сортировки по возрастанию и `"desc"` для сортировки по убыванию.
+- `skip` (number, optional) — Количество пропускаемых записей.
+- `take` (number, optional) — Количество возвращаемых записей.
+
+**Пример запроса:**
+```http
+GET /tasks?title=Task1&sort={"title":"asc"}&skip=0&take=10
+```
+
+**Ответ:**
+```json
+[
   {
-    "id": "task-id",
-    "title": "New Task",
-    "description": "Task Description",
-    "status": "PENDING"
+    "id": "string",
+    "title": "string",
+    "description": "string",
+    "status": "PENDING",
+    "userId": "string"
   }
-  ```
+]
+```
 
----
+### Конечная точка: `/tasks`
+**Метод:** POST  
+**Описание:** Создание новой задачи.  
+**Запрос:**
+```json
+{
+  "title": "string",
+  "description": "string",
+  "status": "PENDING"
+}
+```
+**Ответ:**
+```json
+{
+  "id": "string",
+  "title": "string",
+  "description": "string",
+  "status": "PENDING",
+  "userId": "string"
+}
+```
 
-### PUT `/tasks/:id`
+### Конечная точка: `/tasks/:id`
+**Метод:** PUT  
+**Описание:** Обновление существующей задачи.  
+**Запрос:**
+```json
+{
+  "title": "string",
+  "description": "string",
+  "status": "PENDING",
+  "userId": "string" (optional)
+}
+```
+**Ответ:**
+```json
+{
+  "id": "string",
+  "title": "string",
+  "description": "string",
+  "status": "PENDING",
+  "userId": "string"
+}
+```
 
-- **Описание**: Обновление задачи по ID.
-- **Пример запроса**:
+### Конечная точка: `/tasks/:id`
+**Метод:** DELETE  
+**Описание:** Удаление задачи по идентификатору.  
+**Ответ:** `true`
 
-  ```bash
-  curl -X PUT http://localhost:3000/tasks/task-id \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Updated Task",
-    "description": "Updated Description",
-    "status": "IN_PROGRESS"
-  }'
-  ```
+## 3. Управление Пользователями
 
-- **Пример ответа**:
-  ```json
+### Конечная точка: `/users`
+**Метод:** GET  
+**Описание:** Получение списка пользователей с фильтрацией и сортировкой.  
+**Параметры запроса:**
+- `name` (string, optional) — Фильтр по имени.
+- `email` (string, optional) — Фильтр по email.
+- `filter` (string, optional) — Фильтр в формате JSON. Пример: `{"role": "USER"}`
+- `sort` (string, optional) — Сортировка в формате JSON. Пример: `{"name": "asc"}`. Возможные значения: `"asc"` для сортировки по возрастанию и `"desc"` для сортировки по убыванию.
+- `skip` (number, optional) — Количество пропускаемых записей.
+- `take` (number, optional) — Количество возвращаемых записей.
+
+**Пример запроса:**
+```http
+GET /users?name=John&sort={"email":"asc"}&skip=0&take=10
+```
+
+**Ответ:**
+```json
+[
   {
-    "id": "task-id",
-    "title": "Updated Task",
-    "description": "Updated Description",
-    "status": "IN_PROGRESS"
+    "id": "string",
+    "email": "string",
+    "name": "string",
+    "role": "USER",
+    "avatar": "string"
   }
-  ```
+]
+```
+
+### Конечная точка: `/users/:id`
+**Метод:** GET  
+**Описание:** Получение информации о пользователе по идентификатору.  
+**Ответ:**
+```json
+{
+  "id": "string",
+  "email": "string",
+  "name": "string",
+  "role": "USER",
+  "avatar": "string"
+}
+```
+
+### Конечная точка: `/users`
+**Метод:** POST  
+**Описание:** Создание нового пользователя.  
+**Запрос:**
+```json
+{
+  "email": "string",
+  "password": "string",
+  "name": "string"
+}
+```
+**Ответ:** (аналогично /users/:id GET)
+
+**Ошибки:**
+- `400 Bad Request` — Пользователь уже существует.
+
+### Конечная точка: `/users/:id`
+**Метод:** PUT  
+**Описание:** Обновление информации о пользователе.  
+**Запрос:**
+```json
+{
+  "email": "string",
+  "password": "string",
+  "name": "string"
+}
+```
+**Ответ:** (аналогично /users/:id GET)
+
+### Конечная точка: `/users/:id`
+**Метод:** DELETE  
+**Описание:** Удаление пользователя по идентификатору.  
+**Ответ:** `true`
+
+### Конечная точка: `/users/:id/avatar`
+**Метод:** POST  
+**Описание:** Загрузка аватара для пользователя.  
+**Запрос:** Файл загружается через multipart/form-data.  
+**Ответ:**
+```json
+{
+  "avatarUrl": "string"
+}
+```
+**Ошибки:**
+- `400 Bad Request` — Неподдерживаемый тип файла или файл не загружен.
 
 ---
-
-### DELETE `/tasks/:id`
-
-- **Описание**: Удаление задачи по ID.
-- **Пример запроса**:
-
-  ```bash
-  curl -X DELETE http://localhost:3000/tasks/task-id \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-  ```
-
-- **Пример ответа**:
-  ```json
-  {
-    "message": "Task deleted successfully"
-  }
-  ```
-
----
-
-## Управление Пользователями
-
-### GET `/users`
-
-- **Описание**: Получение списка пользователей с фильтрацией, сортировкой и пагинацией.
-- **Пример запроса**:
-
-  ```bash
-  curl -X GET "http://localhost:3000/users?name=John&email=user@example.com&skip=0&take=5" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-  ```
-
-- **Пример ответа**:
-  ```json
-  [
-    {
-      "id": "user-id",
-      "name": "John Doe",
-      "email": "john@example.com"
-    }
-  ]
-  ```
-
----
-
-### GET `/users/:id`
-
-- **Описание**: Получение данных пользователя по его ID.
-- **Пример запроса**:
-
-  ```bash
-  curl -X GET http://localhost:3000/users/user-id \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-  ```
-
-- **Пример ответа**:
-  ```json
-  {
-    "id": "user-id",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "tasks": [
-      {
-        "id": "task-id",
-        "title": "Task Title",
-        "status": "PENDING"
-      }
-    ]
-  }
-  ```
-
----
-
-### POST `/users`
-
-- **Описание**: Создание нового пользователя.
-- **Пример запроса**:
-
-  ```bash
-  curl -X POST http://localhost:3000/users \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "New User",
-    "email": "newuser@example.com",
-    "password": "password123"
-  }'
-  ```
-
-- **Пример ответа**:
-  ```json
-  {
-    "id": "user-id",
-    "name": "New User",
-    "email": "newuser@example.com"
-  }
-  ```
-
----
-
-### PUT `/users/:id`
-
-- **Описание**: Обновление данных пользователя по ID.
-- **Пример запроса**:
-
-  ```bash
-  curl -X PUT http://localhost:3000/users/user-id \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Updated User",
-    "email": "updateduser@example.com",
-    "password": "newpassword123"
-  }'
-  ```
-
-- **Пример ответа**:
-  ```json
-  {
-    "id": "user-id",
-    "name": "Updated User",
-    "email": "updateduser@example.com"
-  }
-  ```
-
----
-
-### DELETE `/users/:id`
-
-- **Описание**: Удаление пользователя по ID (только для администраторов).
-- **Пример запроса**:
-
-  ```bash
-  curl -X DELETE http://localhost:3000/users/user-id \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-  ```
-
-- **Пример ответа**:
-  ```json
-  {
-    "message": "User deleted successfully"
-  }
-  ```
-
----
-
-### POST `/users/:id/avatar`
-
-- **Описание**: Загрузка аватара пользователя.
-- **Пример запроса**:
-
-  ```bash
-  curl -X POST http://localhost:3000/users/user-id/avatar \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -F "avatar=@/path/to/avatar.png"
-  ```
-
-- **Пример ответа**:
-  ```json
-  {
-    "message": "Avatar uploaded successfully",
-    "avatarUrl": "/uploads/avatars/avatar.png"
-  }
-  ```
