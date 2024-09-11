@@ -72,15 +72,7 @@ describe('UserController', () => {
         password: 'password',
         name: 'Test User',
       };
-      jest.spyOn(service, 'getByEmail').mockResolvedValue({
-        id: '1',
-        email: 'test@test.com',
-        password: 'password',
-        name: 'Test User',
-        role: 'USER',
-        avatar: '',
-        tasks: [],
-      });
+      jest.spyOn(service, 'getByEmail').mockResolvedValue(result);
 
       await expect(controller.create(dto)).rejects.toThrow(BadRequestException);
     });

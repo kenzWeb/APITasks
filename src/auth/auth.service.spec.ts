@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma.service';
 import { UserService } from '../user/user.service';
-import { user } from './auth.interface';
 import { AuthService } from './auth.service';
+import { user } from './constants/constants';
 import { AuthDto } from './dto/auth.dto';
 
 describe('AuthService', () => {

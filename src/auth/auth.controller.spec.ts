@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRole } from '@prisma/client';
 import { Response } from 'express';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { result } from './constants/constants';
 import { AuthDto } from './dto/auth.dto';
 
 describe('AuthController', () => {
@@ -42,19 +42,6 @@ describe('AuthController', () => {
         password: 'password',
       };
       const res: Partial<Response> = { cookie: jest.fn() };
-      const result = {
-        accessToken: 'access_token',
-        refreshToken: 'refresh_token',
-        user: {
-          id: '1',
-          email: 'john@example.com',
-          password: 'password',
-          name: 'John Doe',
-          role: UserRole.USER,
-          avatar: '/uploads/avatars/default-icon.png',
-          tasks: [],
-        },
-      };
 
       jest.spyOn(authService, 'login').mockResolvedValue(result);
 
@@ -64,7 +51,7 @@ describe('AuthController', () => {
       });
       expect(authService.addRefreshTokenToResponse).toHaveBeenCalledWith(
         res,
-        'refresh_token',
+        'new_refresh_token',
       );
     });
   });
@@ -77,19 +64,6 @@ describe('AuthController', () => {
         password: 'password',
       };
       const res: Partial<Response> = { cookie: jest.fn() };
-      const result = {
-        accessToken: 'access_token',
-        refreshToken: 'new_refresh_token',
-        user: {
-          id: '1',
-          email: 'john@example.com',
-          password: 'password',
-          name: 'John Doe',
-          role: UserRole.USER,
-          avatar: '/uploads/avatars/default-icon.png',
-          tasks: [],
-        },
-      };
 
       jest.spyOn(authService, 'register').mockResolvedValue(result);
 

@@ -23,6 +23,17 @@ export class TaskService {
     });
   }
 
+  async getById(id: string) {
+    const oldUser = await this.prisma.task.findUnique({
+      where: { id: id },
+    });
+
+    if (!oldUser) throw new NotFoundException('Задача не найдена');
+    return this.prisma.task.findUnique({
+      where: { id: id },
+    });
+  }
+
   async create(dto: CreateTaskDto, userId: string) {
     return this.prisma.task.create({
       data: {
@@ -57,13 +68,11 @@ export class TaskService {
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    const task = await this.prisma.task.findUnique({ where: { id: id } });
+
+    if (!task) throw new NotFoundException('Задача не найдена');
+
     return this.prisma.task.delete({ where: { id: id } });
   }
-}
-
-export enum ETaskStatus {
-  PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { hash } from 'argon2';
 import { AuthDto } from '../auth/dto/auth.dto';
@@ -30,6 +30,13 @@ export class UserService {
   }
 
   async getById(id: string) {
+    const oldUser = await this.prisma.user.findUnique({
+      where: { id },
+      include: { tasks: true },
+    });
+
+    if (!oldUser) throw new NotFoundException('Пользователь не найден');
+
     return this.prisma.user.findUnique({
       where: { id },
       include: { tasks: true },

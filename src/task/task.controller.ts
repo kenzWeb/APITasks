@@ -44,6 +44,12 @@ export class TaskController {
   }
 
   @Auth()
+  @Get(':id')
+  getById(@Param('id') id: string) {
+    return this.taskService.getById(id);
+  }
+
+  @Auth()
   @Post()
   create(@Body() createTaskDto: CreateTaskDto, @Req() req) {
     const userId = req.user.id;
